@@ -94,7 +94,14 @@ function groupBy(datapoints, interval, groupByCallback) {
   }));
 }
 
-function groupBy_perf(datapoints, interval, groupByCallback) {
+function groupBy_perf(datapoints_unsorted, interval, groupByCallback) {
+
+  // Note that  aggregateBy() does  not sort  the points  by timestamp
+  // after   flattening.    Compare   that  with   sumSeries()   which
+  // does. FIXME: sorting  them just in case may  kill performance and
+  // thus the whole point of groupBy_perf().
+  let datapoints = sortByTime(datapoints_unsorted);
+
   let ms_interval = utils.parseInterval(interval);
   let grouped_series = [];
   let frame_values = [];
